@@ -9,7 +9,8 @@ class IOFileCopy {
             var out = new FileOutputStream("/Users/anurag/Data/scrap/javaLowLatency/CoreJava/Examples/dest.txt")) {
             byte[] buf = new byte[1024];
             int len;
-            while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+            while ((len = in.read(buf)) > 0)
+                out.write(buf, 0, len);
         }
     }
 }
