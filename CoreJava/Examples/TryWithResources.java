@@ -1,7 +1,11 @@
 package Examples;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class TryWithResources {
     public static void main(String[] args) throws Exception {
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("data.txt"))) {
+        try (BufferedReader br = new BufferedReader(FileReader("data.txt"))) {
             System.out.println(br.readLine());
         } catch (Exception e){
             System.out.println(e);
