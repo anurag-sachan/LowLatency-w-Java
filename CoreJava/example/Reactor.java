@@ -9,7 +9,7 @@ package example;
 // Reactive Streams using Reactor
 // Requires Maven dependency: io.projectreactor:reactor-core
 import reactor.core.publisher.Flux;
-class ReactorExample {
+class Reactor {
     public static void main(String[] args) {
         Flux.range(1, 5).map(i -> i * 10).subscribe(System.out::println);
     }
