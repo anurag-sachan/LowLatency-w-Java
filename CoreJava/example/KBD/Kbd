@@ -1,0 +1,82 @@
+import kx.c;
+import java.io.IOException;
+import java.util.Date;
+
+public class Kdb {
+    private c connection;
+
+    public Kdb(String host, int port, String credentials) throws kx.c.KException, IOException {
+        connection = new c(host, port, credentials);
+    }
+    
+    public void close() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public Object executeQuery(String query) throws kx.c.KException, IOException {
+        return connection.k(query);
+    }
+    
+    public void insertTradeData(String symbol, double price, long quantity, Date timestamp) throws kx.c.KException, IOException {
+        // Create a dictionary for the trade data
+        Object[] keys = {"sym", "price", "size", "time"};
+        Object[] values = {symbol, price, quantity, timestamp};
+        
+        // Execute the insert
+        connection.k("insert", "trade", keys, values);
+    }
+    
+    public Object getVwap(String symbol) throws kx.c.KException, IOException {
+        // Volume Weighted Average Price
+        String query = "select vwap:sum[price*size]%sum size from trade where sym=`" + symbol;
+        return connection.k(query);
+    }
+    
+    public Object subscribeToTicks(String symbol) throws kx.c.KException, IOException {
+        // Subscribe to real-time ticks for a symbol
+        return connection.k(".u.sub", "tick", symbol);
+    }
+    
+    public static void main(String[] args) {
+        AdvancedKdbExample kdb = null;
+        
+        try {
+            kdb = new AdvancedKdbExample("localhost", 5001, "user:pass");
+            
+            // Insert some sample data
+            Date now = new Date();
+            kdb.insertTradeData("AAPL", 150.25, 100, now);
+            kdb.insertTradeData("AAPL", 150.50, 200, new Date(now.getTime() + 1000));
+            kdb.insertTradeData("AAPL", 150.75, 150, new Date(now.getTime() + 2000));
+            
+            // Query the data
+            Object result = kdb.executeQuery("select from trade where sym=`AAPL");
+            System.out.println("Query result: " + result);
+            
+            // Calculate VWAP
+            Object vwap = kdb.getVwap("AAPL");
+            System.out.println("VWAP: " + vwap);
+            
+            // Subscribe to real-time ticks (if the KDB+ server supports it)
+            try {
+                Object subscription = kdb.subscribeToTicks("AAPL");
+                System.out.println("Subscription: " + subscription);
+            } catch (Exception e) {
+                System.out.println("Subscription not supported on this KDB+ instance");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (kdb != null) {
+                kdb.close();
+            }
+        }
+    }
+}
