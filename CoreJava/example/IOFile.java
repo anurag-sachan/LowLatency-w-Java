@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 
 class IOFileCopy {
     public static void main(String[] args) throws Exception {
-        try (var in = new FileInputStream("/Users/anurag/Data/scrap/javaLowLatency/CoreJava/Examples/source.txt");
-            var out = new FileOutputStream("/Users/anurag/Data/scrap/javaLowLatency/CoreJava/Examples/dest.txt")) {
+        try (var in = new FileInputStream("/Users/anurag/Data/scrap/javaLowLatency/CoreJava/Examples/Files/source.txt");
+            var out = new FileOutputStream("/Users/anurag/Data/scrap/javaLowLatency/CoreJava/Examples/Files/dest.txt")) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0)
