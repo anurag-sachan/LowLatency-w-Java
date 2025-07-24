@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.grpc";
+option java_outer_classname = "StockServiceProto";
+
+package stockservice;
+
+// The stock service definition
+service StockService {
+  // Get stock price stream
+  rpc GetStockPriceStream (StockRequest) returns (stream StockResponse) {}
+  
+  // Place an order
+  rpc PlaceOrder (OrderRequest) returns (OrderResponse) {}
+}
+
+// Request for a specific stock
+message StockRequest {
+  string symbol = 1;
+}
+
+// Stock price response
+message StockResponse {
+  string symbol = 1;
+  double price = 2;
+  int64 timestamp = 3;
+}
+
+// Order request
+message OrderRequest {
+  string symbol = 1;
+  double price = 2;
+  int32 quantity = 3;
+  OrderType type = 4;
+  
+  enum OrderType {
+    BUY = 0;
+    SELL = 1;
+  }
+}
+
+// Order response
+message OrderResponse {
+  string orderId = 1;
+  string status = 2;
+  double executedPrice = 3;
+}
