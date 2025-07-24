@@ -54,3 +54,9 @@ class EchoServerHandler extends ChannelInboundHandlerAdapter {
         ctx.close(); // Close connection on error
     }
 }
+
+//  <dependency>
+//     <groupId>io.netty</groupId>
+//     <artifactId>netty-all</artifactId>
+//     <version>4.1.68.Final</version>
+// </dependency>
